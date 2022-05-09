@@ -13,9 +13,10 @@ const SocketProvider = ({children}: {children: ReactNode}) => {
     const [ user, _ ] = useUser()
 
     const socket = io({
-        auth: {
-            token: user.token
-        }
+        // host: "",
+        // auth: {
+        //     token: user.token
+        // }
     })
 
     const memoizedSocket = useMemo(()=> socket, [socket])

@@ -13,9 +13,9 @@ const useUser = () => {
     
     const [user, setUser] = context
 
-    if(user === null) {
-        throw new Error("User is required!")
-    }
+    // if(user === null) {
+    //     throw new Error("User is required!")
+    // }
 
     return context
 
