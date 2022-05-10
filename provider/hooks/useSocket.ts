@@ -8,7 +8,7 @@ const useSocket = () => {
     const context = useContext(UserContext)
 
     if(context === null) {
-        throw new Error("context should be used inside its Provider")
+        throw new Error("useSocket must be used in a SocketProvider")
     }
 
     return context

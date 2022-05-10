@@ -8,7 +8,7 @@ const useUser = () => {
     const context = useContext(UserContext)
 
     if(context === null) {
-        throw new Error("context should be used inside its Provider")
+        throw new Error("useUser must be used in a UserProvider")
     }
     
     const [user, setUser] = context

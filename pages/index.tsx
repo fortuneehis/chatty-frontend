@@ -1,11 +1,14 @@
 import type { NextPage } from 'next'
+import { ChatBox, SideBar } from '../components'
+
 
 
 const App: NextPage = () => {
   return (
-    <>
-      <div className="w-4 h-4 bg-slate-900 text-yellow-100">hit</div>
-    </>
+    <div className="grid grid-cols-12 h-screen gap-5 px-10 py-8">
+      <SideBar/>
+      <ChatBox/>
+    </div>
   )
 }
 

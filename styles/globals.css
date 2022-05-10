@@ -5,8 +5,8 @@
 /* html, body {
   @apply font-poppins;
 
-}
+} */
 
 body {
-  @apply bg-gray-light box-border overflow-hidden h-screen;
-} */
+  @apply bg-dark-100 box-border overflow-hidden h-screen;
+}
