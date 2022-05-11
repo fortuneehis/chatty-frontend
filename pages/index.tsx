@@ -5,7 +5,7 @@ import { ChatBox, SideBar } from '../components'
 
 const App: NextPage = () => {
   return (
-    <main className="xl:max-w-[1440px] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 h-screen gap-5 md:px-10 md:py-8">
+    <main className="xl:max-w-[1440px] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 h-screen gap-5 md:px-10 md:py-8 w-screen">
       <SideBar/>
       <ChatBox/>
     </main>

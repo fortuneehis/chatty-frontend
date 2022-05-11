@@ -7,7 +7,7 @@ const ActiveUsersSkeleton = () => {
             <ul className="overflow-hidden flex">
                 {
                     Array(5).fill([1,2,3,4,5]).map(i=>(
-                        <li key={i} className="shrink-0 px-2 flex flex-col items-center">
+                        <li key={i} className="shrink-0 pr-2 flex flex-col items-center">
                             <div className="w-12 h-12 rounded-full bg-dark-60"></div>
                             <div className="bg-dark-60 w-8 h-2 mt-1"></div>
                         </li>

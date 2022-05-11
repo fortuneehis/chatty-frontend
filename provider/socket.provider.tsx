@@ -1,5 +1,4 @@
-import { userInfo } from "os"
-import { createContext, ReactNode, useMemo, useState } from "react"
+import { createContext, ReactNode, useMemo } from "react"
 import io, { Socket } from "socket.io-client"
 import config from "../utils/config"
 import { useUser } from "./hooks"
