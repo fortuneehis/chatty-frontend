@@ -8,5 +8,5 @@
 } */
 
 body {
-  @apply bg-dark-100 box-border overflow-hidden h-screen;
+  @apply bg-dark-100 box-border overflow-hidden h-screen xl:flex xl:justify-center xl:items-center;
 }
