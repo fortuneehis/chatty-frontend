@@ -18,6 +18,9 @@ module.exports = {
           40: "#969696"
         },
         green: "#82C558"
+      },
+      fontFamily: {
+        "poppins": ["Poppins", "sans-serif"]
       }
     },
   },

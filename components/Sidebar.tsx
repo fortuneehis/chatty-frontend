@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react"
 import { useUser } from "../provider/hooks"
 import ActiveUsers from "./ActiveUsers"
 import Chats from "./Chats"
@@ -6,7 +7,12 @@ import SearchBar from "./SearchBar"
 import { ActiveUsersSkeleton, MiniProfileSkeleton } from "./skeleton"
 
 
-const Sidebar = () => {
+type SidebarProps = {
+    selectedUserId: number|null
+    setSelectedUserId: Dispatch<SetStateAction<number|null>>
+}
+
+const Sidebar = ({selectedUserId, setSelectedUserId}: SidebarProps) => {
 
     // const [user, _] = useUser()
 
@@ -16,7 +22,7 @@ const Sidebar = () => {
             {/* <MiniProfileSkeleton/> */}
             <SearchBar/>
             {/* <ActiveUsersSkeleton/> */}
-            <ActiveUsers/>
+            <ActiveUsers selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId} />
             <Chats/>
         </aside>
     )
