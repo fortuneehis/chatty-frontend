@@ -4,16 +4,27 @@ import UserProvider from '../provider/user.provider'
 import { SocketProvider } from '../provider'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Error } from '../components'
+import {  NextPage } from 'next'
 
+interface ExtendedAppProps extends AppProps {
+    Component: NextPage & { isAPrivatePage: ()=>boolean }
+}
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: ExtendedAppProps) {
+  const isAPrivatePage = Component.isAPrivatePage ?? (()=>false)
   return (
     <ErrorBoundary fallback={<Error/>}>
-        <UserProvider>
-          <SocketProvider>
-              <Component {...pageProps} />
-          </SocketProvider>
-        </UserProvider>
+        {
+          isAPrivatePage() === true ? (
+            <UserProvider>
+              <SocketProvider>
+                <Component {...pageProps} />
+              </SocketProvider>
+            </UserProvider>
+          ) : (
+            <Component {...pageProps} />
+          )
+        }
     </ErrorBoundary>
    
   )

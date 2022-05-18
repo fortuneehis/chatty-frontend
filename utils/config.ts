@@ -1,8 +1,4 @@
-// import * as dotenv from "dotenv"
-
-
-// dotenv.config()
 
 export default  {
-    SERVER_URL: process.env.APP_SERVER_URL
+    SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL as string
 } 

@@ -1,2 +1,2 @@
  @ Create a ActiveUsersSkeletonComponent -------- @Done
- @ Set a max length to username both on the Client and Server
+ @ Set a max length to username both on the Client and Server and validate username with ^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$ regex

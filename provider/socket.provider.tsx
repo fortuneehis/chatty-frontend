@@ -1,28 +1,41 @@
-import { createContext, ReactNode, useMemo } from "react"
+import { createContext, ReactNode, useEffect, useMemo, useRef, useState } from "react"
 import io, { Socket } from "socket.io-client"
 import config from "../utils/config"
 import { useUser } from "./hooks"
 
 
 
-const SocketContext = createContext<Socket|null>(null)
+export const SocketContext = createContext<Socket|null>(null)
 
 
 const SocketProvider = ({children}: {children: ReactNode}) => {
 
-    const [ user, _ ] = useUser()
+    const [user, setUser] = useUser()
 
-    const socket = io({
-        host: config.SERVER_URL,
+
+    const socket = useMemo(()=>io(config.SERVER_URL,{
+        withCredentials: true,
         auth: {
-            token: user?.token ?? ""
+            token: user?.authToken as string
         }
-    })
-   
-    const memoizedSocket = useMemo(()=> socket, [socket])
+    }), [io])
+
+    useEffect(()=>{
+       socket.on("connect", ()=>{
+           console.log(socket.id)
+       })
+        socket.on("connect_error", (err)=>{
+            console.log(err)
+        })
+
+        socket.on("app_error", (err)=> {
+            console.log(err)
+        })
+        
+    }, [])
 
     return (
-        <SocketContext.Provider value={memoizedSocket}>
+        <SocketContext.Provider value={socket}>
             {children}
         </SocketContext.Provider>
     )
