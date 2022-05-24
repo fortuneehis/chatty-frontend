@@ -10,12 +10,12 @@ export const fetchChats = async () => {
         return [chats, null]
 
     } catch(err: any) {
+        if(err.response) {
+            return [null, err.response.data]
+        }
+
         if(err.request) {
             return [null, err.request]
-        }
-        
-        if(err.response) {
-            return [null, err.response]
         }
         
         return [null, err]
@@ -30,12 +30,12 @@ export const fetchChat = async(id: number) => {
         return [response.data.chat, null]
 
     } catch(err: any) {
+        if(err.response) {
+            return [null, err.response.data]
+        }
+
         if(err.request) {
             return [null, err.request]
-        }
-        
-        if(err.response) {
-            return [null, err.response]
         }
         
         return [null, err]

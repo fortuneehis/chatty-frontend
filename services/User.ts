@@ -9,19 +9,18 @@ export const createUser = async (username: string, password: string) => {
             password
         })
 
-        if(!response.data.success) {
-            throw new Error("Something went wrong!")
-        }
-
         return [response, null]
 
     } catch(err: any) {
+       
+        if(err.response) {
+            return [null, err.response.data]
+        }
+
         if(err.request) {
             return [null, err.request]
         }
-        if(err.response) {
-            return [null, err.response]
-        }
+        
         return [null, err]
     }
 }
@@ -36,12 +35,13 @@ export const authenticateUser = async (username: string, password: string) => {
         return [response, null]
 
     } catch(err: any) {
+       
+        if(err.response) {
+            return [null, err.response.data]
+        }
+
         if(err.request) {
             return [null, err.request]
-        }
-        
-        if(err.response) {
-            return [null, err.response]
         }
         
         return [null, err]
@@ -61,14 +61,14 @@ export const getCurrentUser = async(config?: AxiosRequestHeaders) => {
         return [response.data.user, null]
 
     } catch(err: any) {
-        if(err.request) {
-            return [null, err.request]
-        } 
-        
         if(err.response) {
-            return [null, err.response]
+            return [null, err.response.data]
         }
 
+        if(err.request) {
+            return [null, err.request]
+        }
+        
         return [null, err]
         
 
@@ -81,7 +81,15 @@ export const fetchUser = async(id: number) => {
         const response = await apiService().get(`/users/${id}`)
 
         return [response.data.user, null]
-    } catch (err) {
+    } catch (err: any) {
+        if(err.response) {
+            return [null, err.response.data]
+        }
+
+        if(err.request) {
+            return [null, err.request]
+        }
+        
         return [null, err]
     }
     

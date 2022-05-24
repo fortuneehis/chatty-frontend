@@ -44,7 +44,7 @@ const MessageBox = ({id, message, createdDate, isSender, messageStatus}: Message
                     "bg-primary-100 rounded-bl-none": !isSender
                 })} rounded-[10px] p-4`}>
                     <p className="text-base break-words text-light-100">{message}</p>
-                    <p className="text-sm text-light-60">{status}</p>
+                    {isSender && <p className="text-sm text-light-60">{status}</p>}
                 </div>
                 <div className={`flex ${classNames({
                     "justify-end": isSender,

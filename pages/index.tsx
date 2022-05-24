@@ -14,7 +14,7 @@ const App: NextPage & {isAPrivatePage: ()=>boolean}= () => {
   return (
     <main className="xl:max-w-[1440px] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 h-screen gap-5 md:px-10 md:py-8 w-screen">
       <SideBar matches="(min-width: 1768px)" selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId}/>
-      <ChatBox matches="(mix-width: 1768px)" selectedUserId={selectedUserId}/> 
+      <ChatBox matches="(mix-width: 768px)" selectedUserId={selectedUserId}/> 
     </main>
   )
 }
