@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useEffect } from "react"
 import { useSocket, useUser } from "../provider/hooks"
 import ActiveUsers from "./ActiveUsers"
 import Chats from "./Chats"
+import withDrawer from "./HOC/withDrawer"
 import MiniProfile from "./MiniProfile"
 import SearchBar from "./SearchBar"
 import { MiniProfileSkeleton } from "./skeleton"
@@ -10,15 +11,23 @@ import { MiniProfileSkeleton } from "./skeleton"
 type SidebarProps = {
     selectedUserId: number|null
     setSelectedUserId: Dispatch<SetStateAction<number|null>>
+    matches: string
+    match: boolean
+    setShowDrawer: Dispatch<SetStateAction<boolean>>
 }
 
-const Sidebar = ({selectedUserId, setSelectedUserId}: SidebarProps) => {
+const Sidebar = ({selectedUserId, setSelectedUserId, match}: SidebarProps) => {
 
     const [user, setUser] = useUser()
     const socket = useSocket()
-    
+
 
     useEffect(()=>{
+        console.log(match, " ma")
+    },[match])
+
+    useEffect(()=>{
+        
         socket.on(`user_status:${user?.id}`, (status)=> {
          
             if(user) {
@@ -28,6 +37,10 @@ const Sidebar = ({selectedUserId, setSelectedUserId}: SidebarProps) => {
                 })
             }
         })
+
+        return ()=>{
+            socket.off(`user_status:${user?.id}`)
+        }
     },[])
 
     return (
@@ -35,9 +48,9 @@ const Sidebar = ({selectedUserId, setSelectedUserId}: SidebarProps) => {
             {
                 
                 user !== null ? (
-                    <MiniProfile profileImg={user?.profileImg ?? "/unnamed(2).jpg"} username={user?.username!} status={user.status && user?.status.toLowerCase()}/>
+                    <MiniProfile profileImg={user?.profileImg ?? "/unnamed(2).jpg"} username={user?.username!} status={user.status.toLowerCase()}/>
                 ) : (
-                <MiniProfileSkeleton/>
+                    <MiniProfileSkeleton/>
                 )
             }
             <SearchBar/>
@@ -47,4 +60,4 @@ const Sidebar = ({selectedUserId, setSelectedUserId}: SidebarProps) => {
     )
 }
 
-export default Sidebar
+export default withDrawer(Sidebar)

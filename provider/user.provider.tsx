@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react"
 import { UserService } from "../services"
 import { User } from "../types"
@@ -29,14 +30,17 @@ const UserProvider = ({children}: {children: ReactNode}) => {
     }, [])
 
     return (
-            user ? (
+             user ? (
                 <UserContext.Provider value={
             [user, setUser]
         }>
             {children}
         </UserContext.Provider>) : (
-            <div>
-                <p className="text-light-100">Loading user data...</p>
+            <div className="flex flex-col items-center">
+                <div>
+                    <Image src="/illustrations/5.png" width={100} height={100}/>
+                </div>
+                <p className="text-light-100 font-bold">Loading user data...</p>
             </div>
         )
     )

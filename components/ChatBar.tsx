@@ -1,12 +1,18 @@
-import { ChangeEvent,  useState } from "react"
+
+import { ChangeEvent,  Dispatch,  SetStateAction,  useState } from "react"
 import { useSocket } from "../provider/hooks"
+import {Picker} from "emoji-mart"
+
 
 type ChatBarProps = {
-    selectedUserId: number|null
+    selectedUserId: number|null,
+    messages: any,
+    selectedMessage: any
+    setMessages: Dispatch<SetStateAction<any>>
 }
 
 
-export const ChatBar = ({selectedUserId}: ChatBarProps) => {
+export const ChatBar = ({selectedUserId, selectedMessage, messages, setMessages}: ChatBarProps) => {
 
     const [message, setMessage] = useState("")
 
@@ -17,21 +23,32 @@ export const ChatBar = ({selectedUserId}: ChatBarProps) => {
     }
 
     const sendMessage = () => {
-
-        if(message.length === 0) return
-
+        const content = message.trim()
+        if(content.length === 0) return
         socket.emit("new_message",{
             receiverId: selectedUserId,
             isVoiceMessage: false, 
-            message
+            message: content
         }, (data: any)=>{
-            console.log(data)
+
+            if(messages) {
+               setMessages((prev: any)=>[
+                   ...prev,
+                   data
+               ])
+            }
         })
         setMessage("")
         
     }
 
     return (
+        <div className="flex flex-col items-start w-full mb-4 md:mb-0">
+            {selectedMessage && (
+            <div className="relative p-2 my-1 bg-dark-60 rounded-[10px]">
+                <p className="text-xs font-bold text-light-40">You</p>
+                <p className="text-light-60 ">{selectedMessage.message}</p>
+            </div>)}
         <div className="flex w-full">
             <div className="flex-1 items-center bg-dark-60 p-2 md:p-4 rounded-[10px] flex">
                 <textarea value={message} onChange={messageChangeHandler} className="flex-1 w-full text-base bg-transparent outline-none resize-none placeholder:text-light-40 h-7 text-light-40" placeholder="Write a message"/>
@@ -56,6 +73,8 @@ export const ChatBar = ({selectedUserId}: ChatBarProps) => {
                     </svg>
                 </div>
             </div>
+            {/* {typeof window !== "undefined" ? <Picker/> : null} */}
+        </div>
         </div>
     )
 }

@@ -22,3 +22,23 @@ export const fetchChats = async () => {
         
     }
 }
+
+export const fetchChat = async(id: number) => {
+    try {
+        const response = await apiService().get(`/chats?user_id=${id}`)
+
+        return [response.data.chat, null]
+
+    } catch(err: any) {
+        if(err.request) {
+            return [null, err.request]
+        }
+        
+        if(err.response) {
+            return [null, err.response]
+        }
+        
+        return [null, err]
+        
+    }
+}

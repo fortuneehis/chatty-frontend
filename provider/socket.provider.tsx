@@ -31,6 +31,10 @@ const SocketProvider = ({children}: {children: ReactNode}) => {
         socket.on("app_error", (err)=> {
             console.log(err)
         })
+
+        return ()=>{
+            socket.off("app_error")
+        }
         
     }, [])
 

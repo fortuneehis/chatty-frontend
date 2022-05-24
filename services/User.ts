@@ -75,5 +75,17 @@ export const getCurrentUser = async(config?: AxiosRequestHeaders) => {
     }
 }
 
+export const fetchUser = async(id: number) => {
+
+    try {
+        const response = await apiService().get(`/users/${id}`)
+
+        return [response.data.user, null]
+    } catch (err) {
+        return [null, err]
+    }
+    
+}
+
 
 

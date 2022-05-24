@@ -23,7 +23,7 @@ const MiniProfile = ({profileImg, username, status}: MiniProfileProps) => {
            </div>
            <div className="ml-2">
                <h2 className="text-lg font-bold text-light-80 lg:text-xl">{username}</h2>
-               <p className={`text-sm ${userStatusClassnames(status)}`}>{status}</p>
+               <p className={`text-sm ${userStatusClassnames(status.toLowerCase())}`}>{status.toLowerCase()}</p>
            </div>
        </div>
     )

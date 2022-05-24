@@ -1,30 +1,33 @@
-import { FC, ReactNode, useState } from "react"
+import { ComponentType, Dispatch, FC, ReactNode, SetStateAction, useState } from "react"
 import {useMediaQuery} from "react-responsive"
 
 
 
-const withDrawer = (Component: FC<{match: boolean}>) => (matches: string): ReactNode=> {
-
-    const [mediaQueryMatch, setMediaQueryMatch] = useState(()=>match)
+const withDrawer = <T extends { matches: string, setShowDrawer: Dispatch<SetStateAction<boolean>>}>(Component: ComponentType<T>) => (props: Omit<T, "match"|"setShowDrawer">): JSX.Element=> {
 
     const handleMediaQueryChange = (matches: boolean) => {
         if(matches) {
-            setMediaQueryMatch(true)
+            setMediaQueryMatch(()=>true)
         } else {
-            setMediaQueryMatch(false)
+            setMediaQueryMatch(()=>false)
         }
     }
 
-    const match = useMediaQuery({query: matches}, undefined, handleMediaQueryChange)
+    const match = useMediaQuery({
+        query: props.matches,
+    }, undefined, handleMediaQueryChange)
+
+    const [mediaQueryMatch, setMediaQueryMatch] = useState(()=>match)
+    const [showDrawer, setShowDrawer] = useState(false)
 
         return (
-            
-            mediaQueryMatch ? (
-                <Component match={mediaQueryMatch} />
+            <>
+            {mediaQueryMatch ? (
+                showDrawer && <Component {...props as T} setShowDrawer={setShowDrawer} match={mediaQueryMatch} />
             ) : (
-                <Component match={mediaQueryMatch} />
-            )
-            
+                <Component {...props as T} setShowDrawer={setShowDrawer} match={mediaQueryMatch} />
+            )}
+            </>
         )
 }
 

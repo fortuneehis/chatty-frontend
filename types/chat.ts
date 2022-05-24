@@ -1,0 +1,3 @@
+interface Chat {
+    id: number
+}

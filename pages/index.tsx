@@ -1,6 +1,8 @@
 import type { NextPage, NextPageContext } from 'next'
-import { useState } from 'react'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import { ChatBox, SideBar } from '../components'
+import StartChat from '../components/StartChat'
 import { UserService } from '../services'
 
 
@@ -9,12 +11,10 @@ const App: NextPage & {isAPrivatePage: ()=>boolean}= () => {
 
   const [selectedUserId, setSelectedUserId] = useState<number|null>(null)
 
-
-
   return (
     <main className="xl:max-w-[1440px] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 h-screen gap-5 md:px-10 md:py-8 w-screen">
-      <SideBar selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId}/>
-      <ChatBox selectedUserId={selectedUserId}/>
+      <SideBar matches="(min-width: 1768px)" selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId}/>
+      <ChatBox matches="(mix-width: 1768px)" selectedUserId={selectedUserId}/> 
     </main>
   )
 }

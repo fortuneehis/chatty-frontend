@@ -1,33 +1,57 @@
+import classNames from "classnames"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { useSocket } from "../provider/hooks"
+import { convertToLocaleTime } from "../utils/date"
 
 
-const MessageBox = () => {
+
+
+type MessageBoxProps = {
+    id: number
+    message: string
+    createdDate: string
+    isSender: boolean
+    messageStatus: "DELIVERED"|"SEEN"|"SENT"
+}
+
+
+const MessageBox = ({id, message, createdDate, isSender, messageStatus}: MessageBoxProps) => {
+
+    const socket = useSocket()
+
+    const [status, setStatus] = useState(()=>messageStatus)
+
+    useEffect(()=>{
+        console.log(status, "status")
+        socket.on(`message:${id}`, (data)=>{
+            console.log(" data status", data)
+            setStatus(data)
+        })
+
+        return ()=>{
+            socket.off(`message:${id}`)
+        }
+    }, [])
+
     return (
-        <li className="flex justify-end w-full">
+        <li className={`flex ${classNames({
+            "justify-end": isSender,
+            "justify-start": !isSender
+            })} w-full`}>
             <div className="p-4 max-w-[100%] md:max-w-[70%]">
-                <div className="bg-dark-60 rounded-[10px] rounded-br-none p-4">
-                    <p className="text-base text-light-100 break-words">wait  - compiling...
-event - compiled client and server successfully in 826 ms (216 modules)
-wait  - compiling...
-event - compiled client and server successfully in 1090 ms (216 modules)
-wait  - compiling...
-event - compiled client and server successfully in 1048 ms (216 modules)
-wait  - compiling...
-event - compiled client and server successfully in 2.5s (216 modules)
-wait  - compiling...
-event - compiled client and server successfully in 541 ms (216 modules)
-wait  - compiling...
-event - compiled client and server successfully in 1007 ms (216 modules)
-wait  - compiling...
-event - compiled client and server successfully in 523 ms (216 modules)
-wait  - compiling...
-event - compiled client and server successfully in 2.7s (216 modules)
-wait  - compiling...
-event - compiled client and server successfully in 6.8s (216 modules)
-wait  - compiling...
-event - compiled client and server successfully in 7.3s (216 modules)</p>
+                <div className={`${classNames({
+                    "bg-dark-60 rounded-br-none": isSender,
+                    "bg-primary-100 rounded-bl-none": !isSender
+                })} rounded-[10px] p-4`}>
+                    <p className="text-base break-words text-light-100">{message}</p>
+                    <p className="text-sm text-light-60">{status}</p>
                 </div>
-                <div className="flex justify-end mt-4">
-                    <p className="text-light-60 text-sm">11:00PM</p>
+                <div className={`flex ${classNames({
+                    "justify-end": isSender,
+                    "justify-start": !isSender
+                })} mt-4`}>
+                    <p className="text-sm text-light-60">{convertToLocaleTime(createdDate)}</p>
+                    
                 </div>
             </div>
 
