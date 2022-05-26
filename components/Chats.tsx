@@ -71,7 +71,7 @@ const Chats = ({selectedUserId, setSelectedUserId}: ChatsProps) => {
             <h1 className="mb-4 text-2xl font-bold text-light-100 lg:mb-2 xl:mb-4">Chats</h1>
             <ul>
                 {
-                chats && chats.length > 0 ? (
+                chats?.length > 0 ? (
                     chats.map(({id, user: chat, recentMessage}: any)=>(
                         <Chat key={chat.user.id} chats={chats} setChats={setChats} userId={chat.user.id} selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId} username={chat.user.username} recentMessage={recentMessage} chatId={id} />
                     

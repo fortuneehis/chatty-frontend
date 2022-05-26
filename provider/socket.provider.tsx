@@ -18,7 +18,7 @@ const SocketProvider = ({children}: {children: ReactNode}) => {
         auth: {
             token: user?.authToken as string
         }
-    }), [io])
+    }), [])
 
     useEffect(()=>{
        socket.on("connect", ()=>{

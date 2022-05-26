@@ -1,4 +1,5 @@
 import React, {  Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
+import { MediaQueryAllQueryable } from "react-responsive"
 import { useSocket, useUser } from "../provider/hooks"
 import { ChatService, UserService } from "../services"
 import ChatBar from "./ChatBar"
@@ -10,7 +11,7 @@ import StartChat from "./StartChat"
 
 type ChatBoxProps = {
     selectedUserId: number|null,
-    matches: string,
+    matches: MediaQueryAllQueryable,
     match: boolean,
     setShowDrawer: Dispatch<SetStateAction<boolean>>
 
@@ -26,7 +27,6 @@ const ChatBox = ({selectedUserId, match}: ChatBoxProps) => {
     const [selectedMessage, setSelectedMessage] = useState<any>(null)
 
 
-
     useEffect(()=> {
 
         if(messagesContainerRef.current) {
@@ -37,7 +37,7 @@ const ChatBox = ({selectedUserId, match}: ChatBoxProps) => {
         }
 
         socket.on("new_message", (data)=>{
-            if(selectedUserId === data.senderId) {
+            if(selectedUserId === data.sender.id) {
                 if(messages) {
                     setMessages([
                        ...messages,
@@ -104,17 +104,17 @@ const ChatBox = ({selectedUserId, match}: ChatBoxProps) => {
             <div className="">
                 {selectedUser ? <MiniProfile profileImg={"/unnamed.png"} username={selectedUser.username} status={selectedUser.status}/> : <MiniProfileSkeleton/>}
             </div>
-            <ul ref={messagesContainerRef} className="flex-1 flex basis-[40px] flex-col overflow-y-auto lg:overflow-y-hidden lg:hover:overflow-y-auto mb-2">
+            <ul ref={messagesContainerRef} className="flex-1 scrollbar-style flex basis-[40px] flex-col overflow-y-auto lg:overflow-y-hidden lg:hover:overflow-y-auto mb-2">
                 {
-                    messages.length > 0 && messages.map((message: any)=> (
-                        <div onDoubleClick={()=>setSelectedMessage(()=>message)}>
-                            <MessageBox key={message.id} id={message.id} messageStatus={message.messageStatus} isSender={message.senderId === user?.id} message={message.message} createdDate={message.createdDate}/>
+                    messages?.length > 0 && messages.map((message: any)=> (
+                        <div key={message.id} onDoubleClick={()=>setSelectedMessage(()=>message)}>
+                            <MessageBox  parent={message.parent} id={message.id} messageStatus={message.messageStatus} isSender={message.sender.id === user?.id} message={message.message} createdDate={message.createdDate}/>
                         </div>
                     ))
                 }
                 
             </ul>
-            <ChatBar selectedMessage={selectedMessage} messages={messages} setMessages={setMessages} selectedUserId={selectedUserId} />
+            <ChatBar setSelectedMessage={setSelectedMessage} selectedMessage={selectedMessage} messages={messages} setMessages={setMessages} selectedUserId={selectedUserId} />
            </div>}
         </main>) : <StartChat/>
     )

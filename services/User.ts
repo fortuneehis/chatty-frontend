@@ -36,7 +36,7 @@ export const authenticateUser = async (username: string, password: string) => {
 
     } catch(err: any) {
        
-        if(err.response) {
+        if(err.response) { 
             return [null, err.response.data]
         }
 
@@ -81,6 +81,26 @@ export const fetchUser = async(id: number) => {
         const response = await apiService().get(`/users/${id}`)
 
         return [response.data.user, null]
+    } catch (err: any) {
+        if(err.response) {
+            return [null, err.response.data]
+        }
+
+        if(err.request) {
+            return [null, err.request]
+        }
+        
+        return [null, err]
+    }
+    
+}
+
+export const searchUsers = async(username: string) => {
+
+    try {
+        const response = await apiService().get(`/users/search?username=${username}`)
+
+        return [response.data, null]
     } catch (err: any) {
         if(err.response) {
             return [null, err.response.data]

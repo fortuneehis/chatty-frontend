@@ -3,6 +3,7 @@ import Image from "next/image"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useSocket, useUser } from "../provider/hooks"
 import { convertToLocaleTime } from "../utils/date"
+import { textOverflowFix } from "../utils/string"
 
 
 type ChatProps = {
@@ -38,7 +39,9 @@ const Chat = ({chatId, userId, username, chats, setChats, recentMessage, selecte
         <div className="flex flex-1 flex:row lg:flex-col xl:flex-row">
             <div className="flex-1 shrink-0">
                 <h3 className="text-lg font-bold text-light-100">{username}</h3>
-                <p className="text-sm text-light-60">{recentMessage.senderId === user?.id ? `You: ${recentMessage.message}` : recentMessage.message}</p>
+                <p className={`text-sm text-light-60 ${classNames({
+                    "font-bold": recentMessage.messageStatus === "SENT" && recentMessage.sender.id !== user?.id
+                })}`}>{recentMessage.sender.id === user?.id ? `You: ${textOverflowFix(recentMessage.message, 20)}` : textOverflowFix(recentMessage.message, 20)}</p>
             </div>
             <div className="flex flex-col items-end lg:flex-row xl:flex-col">
                 <p className="mt-2 mb-2 text-xs text-left text-light-40 lg:mb-0 lg:mr-2 xl:mr-0 xl:mb-2">{`${convertToLocaleTime(recentMessage.createdDate)}`}</p>

@@ -32,11 +32,12 @@ const ActiveUsers = ({selectedUserId, setSelectedUserId}:ActiveUsersProps) => {
     }
 
     useEffect(()=> {
-        socket.on("active_users", (users)=> {
+        socket.on("active_users", (users)=> { 
             setActiveUsers([
                 ...users.filter(({id}:{id:number})=> id !== user?.id)
             ])
             setLoading(false)
+            
         })
 
         return()=> {
@@ -50,7 +51,7 @@ const ActiveUsers = ({selectedUserId, setSelectedUserId}:ActiveUsersProps) => {
             <h1 className="mb-4 text-2xl font-bold text-light-100">Active Users</h1>
             <ul className="flex overflow-auto">
                 {(
-                     activeUsers.length > 0 ? activeUsers.map(({id, username, profileImgUrl})=>(
+                     activeUsers?.length > 0 ? activeUsers.map(({id, username, profileImgUrl})=>(
                         <li onClick={()=>selectedUserClickHandler(id)} key={id} className={`flex flex-col items-center shrink-0 p-4 hover:bg-dark-60 ${selectedUserId === id ? "bg-dark-60" : ""} rounded-[10px] cursor-pointer mr-1`}>
                             <div>
                                 <Image className="rounded-full" src={"/unnamed.png"} width={48} height={48}/>

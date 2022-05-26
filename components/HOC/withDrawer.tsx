@@ -1,11 +1,13 @@
 import { ComponentType, Dispatch, FC, ReactNode, SetStateAction, useState } from "react"
+import { MediaQueryAllQueryable } from "react-responsive"
 import {useMediaQuery} from "react-responsive"
 
 
 
-const withDrawer = <T extends { matches: string, setShowDrawer: Dispatch<SetStateAction<boolean>>}>(Component: ComponentType<T>) => (props: Omit<T, "match"|"setShowDrawer">): JSX.Element=> {
+const withDrawer = <T extends { matches: MediaQueryAllQueryable, setShowDrawer: Dispatch<SetStateAction<boolean>>}>(Component: ComponentType<T>) => (props: Omit<T, "match"|"setShowDrawer">): JSX.Element=> {
 
     const handleMediaQueryChange = (matches: boolean) => {
+  
         if(matches) {
             setMediaQueryMatch(()=>true)
         } else {
@@ -13,9 +15,7 @@ const withDrawer = <T extends { matches: string, setShowDrawer: Dispatch<SetStat
         }
     }
 
-    const match = useMediaQuery({
-        query: props.matches,
-    }, undefined, handleMediaQueryChange)
+    const match = useMediaQuery(props.matches, undefined, handleMediaQueryChange)
 
     const [mediaQueryMatch, setMediaQueryMatch] = useState(()=>match)
     const [showDrawer, setShowDrawer] = useState(false)

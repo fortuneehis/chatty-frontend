@@ -12,5 +12,7 @@ html, body {
 }
 
 body {
-  @apply bg-dark-100 box-border overflow-hidden h-screen xl:flex xl:justify-center xl:items-center;
+  @apply box-border h-screen overflow-hidden bg-dark-100 xl:flex xl:justify-center xl:items-center;
 }
+
+

@@ -24,8 +24,10 @@ const UserProvider = ({children}: {children: ReactNode}) => {
             
             setUser(user.data)
         }
-
-        getCurrentUser()
+        if(!user) {
+            getCurrentUser()
+        }
+        
        
     }, [])
 
