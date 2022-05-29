@@ -3,6 +3,7 @@ import { NextPage, NextPageContext } from "next"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
 import * as yup from "yup"
 import { UserService } from "../services"
 
@@ -43,7 +44,13 @@ const Register: NextPage  = () => {
             })}
             onSubmit={async({username, password}: InitialValues)=>{
                 setLoading(true)
-                const [_, error] = await UserService.createUser(username, password)
+                const response =  UserService.createUser(username, password)
+                const [_, error] = await response
+                toast.promise(response, {
+                    loading: "🦄 We are setting you up!",
+                    success: "You are ready!",
+                    error: "Something went wrong!"
+                })
                 setLoading(false)
 
                 if(error) {
@@ -56,7 +63,7 @@ const Register: NextPage  = () => {
 
                 router.push("/login")
             }}>
-                 <Form className="flex flex-col w-full mx-4 md:max-w-md">
+                 <Form className="flex flex-col w-full mx-4 md:max-w-md" method="post">
                      <h1 className="mb-8 text-4xl font-bold md:text-center text-light-100">Welcome to Chatty<span className="text-primary-100">.</span></h1>
                      {validationError && validationError.map((error)=><p className="bg-red-500 text-sm text-light-100 p-2 rounded-[10px] mb-2">{error}</p>) }
                      {error && <p className="bg-red-500 text-sm text-light-100 p-2 rounded-[10px] mb-2">{error}</p>}

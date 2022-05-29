@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useEffect, useMemo, useRef, useState } from "react"
+import toast from "react-hot-toast"
 import io, { Socket } from "socket.io-client"
 import config from "../utils/config"
 import { useUser } from "./hooks"
@@ -25,11 +26,17 @@ const SocketProvider = ({children}: {children: ReactNode}) => {
            console.log(socket.id)
        })
         socket.on("connect_error", (err)=>{
-            console.log(err)
+            toast.error(err.message, {
+                id: "socket_connect_error",
+                duration: 15000
+            })
         })
 
         socket.on("app_error", (err)=> {
-            console.log(err)
+            toast.error(err, {
+                id: "socket_app_error",
+                duration: 15000
+            })
         })
 
         return ()=>{

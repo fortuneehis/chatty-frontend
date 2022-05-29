@@ -8,6 +8,7 @@ import { ActiveUsersSkeleton } from "./skeleton"
 type ActiveUsersProps = {
     selectedUserId: number|null
     setSelectedUserId: Dispatch<SetStateAction<number|null>>
+    setShowDrawer: Dispatch<SetStateAction<boolean>>
 }
 
 type ActiveUsers = {
@@ -17,7 +18,7 @@ type ActiveUsers = {
 }
 
 
-const ActiveUsers = ({selectedUserId, setSelectedUserId}:ActiveUsersProps) => {
+const ActiveUsers = ({selectedUserId, setSelectedUserId, setShowDrawer}:ActiveUsersProps) => {
 
     const [loading, setLoading] = useState(true)
 
@@ -47,7 +48,7 @@ const ActiveUsers = ({selectedUserId, setSelectedUserId}:ActiveUsersProps) => {
 
     return (
         loading  ? <ActiveUsersSkeleton/> : (
-        <div className="mt-12">
+        <div className="mt-12" onClick={()=>setShowDrawer(true)}>
             <h1 className="mb-4 text-2xl font-bold text-light-100">Active Users</h1>
             <ul className="flex overflow-auto">
                 {(

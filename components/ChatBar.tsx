@@ -100,7 +100,6 @@ export const ChatBar = ({selectedUserId, setSelectedMessage, selectedMessage, me
                     </svg>
                 </div>
             </div>
-            {/* {typeof window !== "undefined" ? <Picker/> : null} */}
         </div>
         </div>
     )

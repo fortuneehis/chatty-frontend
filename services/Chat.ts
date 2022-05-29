@@ -27,7 +27,9 @@ export const fetchChat = async(id: number) => {
     try {
         const response = await apiService().get(`/chats?user_id=${id}`)
 
-        return [response.data.chat, null]
+        console.log(response.data.data)
+
+        return [response.data.data, null]
 
     } catch(err: any) {
         if(err.response) {

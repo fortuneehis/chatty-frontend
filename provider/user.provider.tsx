@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react"
+import toast from "react-hot-toast"
 import { UserService } from "../services"
 import { User } from "../types"
 
@@ -19,7 +20,9 @@ const UserProvider = ({children}: {children: ReactNode}) => {
             const [user, error] = await UserService.getCurrentUser()
             
             if(error) {
-                console.log(error)
+                toast.error(error, {
+                    duration: 15000
+                })
             }
             
             setUser(user.data)
@@ -42,7 +45,7 @@ const UserProvider = ({children}: {children: ReactNode}) => {
                 <div>
                     <Image src="/illustrations/5.png" width={100} height={100}/>
                 </div>
-                <p className="text-light-100 font-bold">Loading user data...</p>
+                <p className="font-bold text-light-100">Loading user data...</p>
             </div>
         )
     )

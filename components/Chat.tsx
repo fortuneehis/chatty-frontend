@@ -13,6 +13,7 @@ type ChatProps = {
     selectedUserId: number|null
     chatId: number
     chats: any
+    status: string
     setChats: Dispatch<SetStateAction<any>>
     setSelectedUserId: Dispatch<SetStateAction<number|null>>
 }
@@ -22,19 +23,32 @@ const activeChatClassName = (userId: number, selectedUserId: number | null) => c
 })
 
 
-const Chat = ({chatId, userId, username, chats, setChats, recentMessage, selectedUserId, setSelectedUserId}: ChatProps) => {
+const Chat = ({chatId, userId, username, chats, status, setChats, recentMessage, selectedUserId, setSelectedUserId}: ChatProps) => {
 
     const [user] = useUser()
-
+    const socket = useSocket()
+    const [userStatus, setUserStatus] = useState(()=>status)
     const selectedUserClickHandler = (userId: number) => {
         setSelectedUserId(()=>userId)
     }
 
+    useEffect(()=>{
+        socket.on(`user_status:${userId}`, (status)=> {
+            setUserStatus(status)
+        }) 
+
+        return ()=>{
+            socket.off(`user_status:${userId}`)
+        }
+    },[])
+
+
 
     return (
         <li onClick={()=>selectedUserClickHandler(userId)} key={chatId} className={`flex p-4 relative ${ activeChatClassName(userId, selectedUserId)} hover:bg-dark-60 cursor-pointer  rounded-[10px] mb-4`}>
-        <div className="mr-2 shrink-0">
+        <div className="relative mr-2 shrink-0">
             <Image className="rounded-full" src="/unnamed.png" width={48} height={48}/>
+            {userStatus=== "ONLINE" && <div className="absolute right-0 w-4 h-4 border-2 rounded-full bottom-1 border-dark-80 bg-green"></div>}
         </div>
         <div className="flex flex-1 flex:row lg:flex-col xl:flex-row">
             <div className="flex-1 shrink-0">
@@ -44,7 +58,7 @@ const Chat = ({chatId, userId, username, chats, setChats, recentMessage, selecte
                 })}`}>{recentMessage.sender.id === user?.id ? `You: ${textOverflowFix(recentMessage.message, 20)}` : textOverflowFix(recentMessage.message, 20)}</p>
             </div>
             <div className="flex flex-col items-end lg:flex-row xl:flex-col">
-                <p className="mt-2 mb-2 text-xs text-left text-light-40 lg:mb-0 lg:mr-2 xl:mr-0 xl:mb-2">{`${convertToLocaleTime(recentMessage.createdDate)}`}</p>
+                <p className="mt-2 mb-2 text-xs text-left text-light-40 lg:mb-0 lg:mr-2 xl:mr-0 xl:mb-2">{`${convertToLocaleTime(recentMessage.createdAt)}`}</p>
                 <div className="w-4 h-4 rounded-full bg-primary-100"></div>
             </div>
         </div>

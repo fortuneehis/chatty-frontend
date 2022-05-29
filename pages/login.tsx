@@ -3,6 +3,7 @@ import { NextPage, NextPageContext } from "next"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
 import * as yup from "yup"
 import { UserService } from "../services"
 
@@ -42,7 +43,13 @@ const Login: NextPage  = () => {
             })}
             onSubmit={async({username, password}: InitialValues)=>{
                 setLoading(true)
-                const [_, error] = await UserService.authenticateUser(username, password)
+                const response = UserService.authenticateUser(username, password)
+                const [_, error] = await response
+                toast.promise(response, {
+                    loading: "🦄 Almost ready!",
+                    success: "👋 Welcome Chief!",
+                    error: "Something went wrong!"
+                })
                 setLoading(false)
                 if(error) {
                     setError(()=>error.message)
@@ -53,7 +60,7 @@ const Login: NextPage  = () => {
                 router.push("/")
                 
             }}>
-                <Form className="flex flex-col w-full mx-4 overflow-y-auto md:max-w-md">
+                <Form className="flex flex-col w-full mx-4 overflow-y-auto md:max-w-md" method="post">
                     <h1 className="mb-8 text-4xl font-bold md:text-center text-light-100">Login to continue<span className="text-primary-100">.</span></h1>
                     {error && <p className="bg-red-500 text-sm text-light-100 p-2 rounded-[10px] mb-2">{error}</p>}
                     <div className="flex flex-col px-1 mb-4">

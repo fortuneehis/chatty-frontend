@@ -1,6 +1,7 @@
 import type { NextPage, NextPageContext } from 'next'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import { ChatBox, SideBar } from '../components'
 import StartChat from '../components/StartChat'
 import { UserService } from '../services'
@@ -10,16 +11,13 @@ import { UserService } from '../services'
 const App: NextPage & {isAPrivatePage: ()=>boolean}= () => {
 
   const [selectedUserId, setSelectedUserId] = useState<number|null>(null)
-
+  const [showSidebarDrawer, setShowSidebarDrawer] = useState(false)
+  const [showChatboxDrawer, setShowChatboxDrawer] = useState(false)
+ 
   return (
     <main className="xl:max-w-[1440px] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 h-screen gap-5 md:px-10 md:py-8 w-screen">
-      <SideBar matches={{
-        minWidth: 768,
-        maxWidth: 1024
-      }} selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId}/>
-      <ChatBox matches={{
-        maxWidth: 768,
-      }} selectedUserId={selectedUserId}/> 
+      <SideBar setShowDrawer={setShowSidebarDrawer} setShowChatboxDrawer={setShowChatboxDrawer} showDrawer={showSidebarDrawer} selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId}/>
+      <ChatBox setSelectedUserId={setSelectedUserId} showDrawer={showChatboxDrawer} setShowDrawer={setShowChatboxDrawer} selectedUserId={selectedUserId}/> 
     </main>
   )
 }

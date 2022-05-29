@@ -1,5 +1,5 @@
 import classNames from "classnames"
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { useSocket, useUser } from "../provider/hooks"
 import { convertToLocaleTime } from "../utils/date"
 import { textOverflowFix } from "../utils/string"
@@ -10,14 +10,14 @@ import { textOverflowFix } from "../utils/string"
 type MessageBoxProps = {
     id: number
     message: string
-    createdDate: string
+    createdAt: string
     isSender: boolean
     messageStatus: "DELIVERED"|"SEEN"|"SENT"
     parent: any
 }
 
 
-const MessageBox = ({id, message, parent, createdDate, isSender, messageStatus}: MessageBoxProps) => {
+const MessageBox = ({id, message, parent, createdAt, isSender, messageStatus}: MessageBoxProps) => {
 
     const socket = useSocket()
 
@@ -25,10 +25,14 @@ const MessageBox = ({id, message, parent, createdDate, isSender, messageStatus}:
 
     const [status, setStatus] = useState(()=>messageStatus)
 
+    const messageRef = useRef<HTMLLIElement>(null)
+
     useEffect(()=>{
+        if(messageRef.current) {
+            console.log(messageRef.current.id)
+        }
         console.log(status, "status")
         socket.on(`message:${id}`, (data)=>{
-            console.log(" data status", data)
             setStatus(data)
         })
 
@@ -38,7 +42,7 @@ const MessageBox = ({id, message, parent, createdDate, isSender, messageStatus}:
     }, [])
 
     return (
-        <li className={`flex ${classNames({
+        <li ref={messageRef} id={`message-${id}`} className={`flex ${classNames({
             "justify-end": isSender,
             "justify-start": !isSender
             })} w-full`}>
@@ -58,7 +62,7 @@ const MessageBox = ({id, message, parent, createdDate, isSender, messageStatus}:
                     "justify-end": isSender,
                     "justify-start": !isSender
                 })} mt-4`}>
-                    <p className="text-sm text-light-60">{convertToLocaleTime(createdDate)}</p>
+                    <p className="text-sm text-light-60">{convertToLocaleTime(createdAt)}</p>
                     
                 </div>
             </div>

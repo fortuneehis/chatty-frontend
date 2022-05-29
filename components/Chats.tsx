@@ -3,7 +3,7 @@ import Image from "next/image"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useSocket, useUser } from "../provider/hooks"
 import { ChatService } from "../services"
-import { convertToLocaleTime } from "../utils/date"
+import {toast} from "react-hot-toast"
 import Chat from "./Chat"
 import { ChatsSkeleton } from "./skeleton"
 
@@ -12,10 +12,11 @@ import { ChatsSkeleton } from "./skeleton"
 type ChatsProps = {
     selectedUserId: number|null
     setSelectedUserId: Dispatch<SetStateAction<number|null>>
+    setShowChatboxDrawer: Dispatch<SetStateAction<boolean>>
 }
 
 
-const Chats = ({selectedUserId, setSelectedUserId}: ChatsProps) => {
+const Chats = ({selectedUserId, setSelectedUserId, setShowChatboxDrawer}: ChatsProps) => {
 
     const [chats, setChats] = useState<any>([])
 
@@ -25,20 +26,10 @@ const Chats = ({selectedUserId, setSelectedUserId}: ChatsProps) => {
 
     useEffect(()=>{
         socket.on("chats", (data)=>{
-            if(chats.some((chat: any)=> chat.id === data.id)) {
-
-                setChats([...chats.map((chat: any)=>(chat.id === data.id ? {
-                        ...chat,
-                        recentMessage: data.recentMessage
-                    } : chat))])
-            } else {
-                
                 setChats([
                     data,
-                    ...chats
-                    
+                    ...chats.filter((chat: any)=>chat.id !== data.id)
                 ])
-            }
             
         })
 
@@ -54,7 +45,9 @@ const Chats = ({selectedUserId, setSelectedUserId}: ChatsProps) => {
             const [data, error] = await ChatService.fetchChats()
 
             if(error) {
-                console.log(error)
+                toast.error(error, {
+                    duration: 15000
+                })
             }
 
             setChats(data)
@@ -73,8 +66,9 @@ const Chats = ({selectedUserId, setSelectedUserId}: ChatsProps) => {
                 {
                 chats?.length > 0 ? (
                     chats.map(({id, user: chat, recentMessage}: any)=>(
-                        <Chat key={chat.user.id} chats={chats} setChats={setChats} userId={chat.user.id} selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId} username={chat.user.username} recentMessage={recentMessage} chatId={id} />
-                    
+                        <div key={chat.user.id} onClick={()=>setShowChatboxDrawer(true)}>
+                            <Chat chats={chats} setChats={setChats} userId={chat.user.id} status={chat.user.status} selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId} username={chat.user.username} recentMessage={recentMessage} chatId={id} />
+                        </div>
                 ))) : (
                     <div className=" flex flex-col p-8 items-center bg-dark-100 mx-4 rounded-[10px]">
                         <div className="w-12 h-12 bg-dark-60 rounded-[10px] mb-4"></div>
