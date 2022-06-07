@@ -60,7 +60,10 @@ const ActiveUsers = ({selectedUserId, setSelectedUserId, setShowDrawer}:ActiveUs
                             <p className="text-xs text-center text-light-40">{username}</p>
                         </li>
                     )) : (
-                        <p className="text-light-40">No other user is active now</p>
+                        <div className="w-full flex flex-col p-8 items-center bg-dark-100 rounded-[10px]">
+                            <Image src="/illustrations/2.png" width="48" height="48"/>
+                            <p className="text-lg font-bold text-center text-light-100 ">No other user is active now</p>
+                        </div>
                     )
                     )
                 }

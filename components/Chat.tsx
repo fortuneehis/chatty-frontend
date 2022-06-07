@@ -12,9 +12,7 @@ type ChatProps = {
     recentMessage: any
     selectedUserId: number|null
     chatId: number
-    chats: any
     status: string
-    setChats: Dispatch<SetStateAction<any>>
     setSelectedUserId: Dispatch<SetStateAction<number|null>>
 }
 
@@ -23,17 +21,19 @@ const activeChatClassName = (userId: number, selectedUserId: number | null) => c
 })
 
 
-const Chat = ({chatId, userId, username, chats, status, setChats, recentMessage, selectedUserId, setSelectedUserId}: ChatProps) => {
+const Chat = ({chatId, userId, username, status, recentMessage, selectedUserId, setSelectedUserId}: ChatProps) => {
 
     const [user] = useUser()
     const socket = useSocket()
     const [userStatus, setUserStatus] = useState(()=>status)
+
     const selectedUserClickHandler = (userId: number) => {
         setSelectedUserId(()=>userId)
     }
 
     useEffect(()=>{
         socket.on(`user_status:${userId}`, (status)=> {
+            console.log("status updated", status)
             setUserStatus(status)
         }) 
 
@@ -45,10 +45,10 @@ const Chat = ({chatId, userId, username, chats, status, setChats, recentMessage,
 
 
     return (
-        <li onClick={()=>selectedUserClickHandler(userId)} key={chatId} className={`flex p-4 relative ${ activeChatClassName(userId, selectedUserId)} hover:bg-dark-60 cursor-pointer  rounded-[10px] mb-4`}>
+        <li onClick={()=>selectedUserClickHandler(userId)} key={chatId} className={`flex items-center p-4 relative ${ activeChatClassName(userId, selectedUserId)} hover:bg-dark-60 cursor-pointer  rounded-[10px] mb-4`}>
         <div className="relative mr-2 shrink-0">
             <Image className="rounded-full" src="/unnamed.png" width={48} height={48}/>
-            {userStatus=== "ONLINE" && <div className="absolute right-0 w-4 h-4 border-2 rounded-full bottom-1 border-dark-80 bg-green"></div>}
+            {userStatus === "ONLINE" && <div className="absolute right-0 w-4 h-4 border-2 rounded-full bottom-1 border-dark-80 bg-green"></div>}
         </div>
         <div className="flex flex-1 flex:row lg:flex-col xl:flex-row">
             <div className="flex-1 shrink-0">

@@ -1,5 +1,8 @@
+import { useRouter } from "next/router"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import toast from "react-hot-toast"
 import { useSocket, useUser } from "../provider/hooks"
+import { UserService } from "../services"
 import ActiveUsers from "./ActiveUsers"
 import Chats from "./Chats"
 import withDrawer from "./HOC/withDrawer"
@@ -20,6 +23,7 @@ const Sidebar = ({selectedUserId, setSelectedUserId, setShowChatboxDrawer}: Side
 
     const [user, setUser] = useUser()
     const socket = useSocket()
+    const router = useRouter()
 
     useEffect(()=>{
         
@@ -43,12 +47,37 @@ const Sidebar = ({selectedUserId, setSelectedUserId, setShowChatboxDrawer}: Side
             {
                 
                 user !== null  ? (
-                    <MiniProfile profileImg={user?.profileImg ?? "/unnamed(2).jpg"} username={user?.username!} status={user.status.toLowerCase()}/>
+                    <div className="flex items-center justify-between">
+                        <MiniProfile profileImg={user?.profileImg ?? "/unnamed(2).jpg"} username={user?.username!} status={user.status.toLowerCase()}/>
+                        <div onClick={async()=>{
+                            const [data, error] = await UserService.logUserOut()
+
+                            if(error) {
+                                toast.error(error.message, {
+                                    duration: 15000
+                                })
+                            }
+                            console.log(data)
+                            if(data?.success) {
+                                toast.success(data.message)
+                                socket.disconnect() 
+                                router.push("/login")
+                                
+                            }
+                        }} className="p-2 ml-1 active:bg-dark-100 hover:bg-dark-100 rounded-[10px] cursor-pointer">
+                        <p className="text-primary-100">
+                        <svg className="inline-block" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3 5C3 3.9 3.9 3 5 3H13V5H5V19H13V21H5C3.9 21 3 20.1 3 19V5ZM17.176 11L14.64 8.464L16.054 7.05L21.004 12L16.054 16.95L14.64 15.536L17.176 13H10.59V11H17.176Z" fill="#0065ca"/>
+                        </svg>
+                        Logout
+                        </p>
+                        </div> 
+                    </div>
                 ) : (
                     <MiniProfileSkeleton/>
                 )
             }
-            <SearchBar/>
+            <SearchBar setShowChatboxDrawer={setShowChatboxDrawer} setSelectedUserId={setSelectedUserId} selectedUserId={selectedUserId}/>
             <ActiveUsers setShowDrawer={setShowChatboxDrawer} selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId} />
             <Chats setShowChatboxDrawer={setShowChatboxDrawer} selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId}/>
         </aside>

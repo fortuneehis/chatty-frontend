@@ -115,5 +115,24 @@ export const searchUsers = async(username: string) => {
     
 }
 
+export const logUserOut = async() => {
+    try {
+
+        const response = await apiService().post(`/users/logout`)
+        return [response.data, null]
+
+    } catch(err: any) {
+        if(err.response) {
+            return [null, err.response.data]
+        }
+
+        if(err.request) {
+            return [null, err.request]
+        }
+        
+        return [null, err]
+    }
+}
+
 
 

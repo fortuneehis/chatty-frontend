@@ -43,13 +43,8 @@ const Login: NextPage  = () => {
             })}
             onSubmit={async({username, password}: InitialValues)=>{
                 setLoading(true)
-                const response = UserService.authenticateUser(username, password)
-                const [_, error] = await response
-                toast.promise(response, {
-                    loading: "🦄 Almost ready!",
-                    success: "👋 Welcome Chief!",
-                    error: "Something went wrong!"
-                })
+                const [_, error] = await UserService.authenticateUser(username, password)
+                
                 setLoading(false)
                 if(error) {
                     setError(()=>error.message)

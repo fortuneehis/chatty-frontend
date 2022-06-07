@@ -1,11 +1,13 @@
 import classNames from "classnames"
 import Image from "next/image"
+import { convertToLocaleTime } from "../utils/date"
 
 
 type MiniProfileProps = {
     profileImg: string
     username: string
-    status: string
+    status: string,
+    lastActiveAt?: string
 }
 
 const userStatusClassnames = (status: string) => classNames({
@@ -14,7 +16,7 @@ const userStatusClassnames = (status: string) => classNames({
 })
 
 
-const MiniProfile = ({profileImg, username, status}: MiniProfileProps) => {
+const MiniProfile = ({profileImg, username, status, lastActiveAt}: MiniProfileProps) => {
 
     return (
        <div className="flex">
@@ -23,7 +25,7 @@ const MiniProfile = ({profileImg, username, status}: MiniProfileProps) => {
            </div>
            <div className="ml-2">
                <h2 className="text-lg font-bold text-light-80 lg:text-xl">{username}</h2>
-               <p className={`text-sm ${userStatusClassnames(status.toLowerCase())}`}>{status.toLowerCase()}</p>
+               <p className={`text-sm ${userStatusClassnames(status.toLowerCase())}`}>{status === "OFFLINE" && lastActiveAt ? <span className="text-xs">last active as at {convertToLocaleTime(lastActiveAt)}</span> : status.toLowerCase()}</p>
            </div>
        </div>
     )

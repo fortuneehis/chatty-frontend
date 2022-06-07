@@ -5,10 +5,15 @@ export const convertToLocaleTime = (datetime: string) => {
     const date = new Date(datetime)
 
     return isToday(date) ? (
-        `${getHours(date)}:${getMinutes(date)}`
+        date.toLocaleTimeString("en-US", {
+            timeStyle:"short", 
+            second: undefined,
+        })
         ) : (
             isYesterday(date)
         ) ? "yesterday" : (
-            intlFormat(date)
+            date.toLocaleDateString("en-US", {
+                dateStyle: "medium"
+            })
         )
 }

@@ -45,7 +45,7 @@ const Chats = ({selectedUserId, setSelectedUserId, setShowChatboxDrawer}: ChatsP
             const [data, error] = await ChatService.fetchChats()
 
             if(error) {
-                toast.error(error, {
+                toast.error(error.message, {
                     duration: 15000
                 })
             }
@@ -67,11 +67,11 @@ const Chats = ({selectedUserId, setSelectedUserId, setShowChatboxDrawer}: ChatsP
                 chats?.length > 0 ? (
                     chats.map(({id, user: chat, recentMessage}: any)=>(
                         <div key={chat.user.id} onClick={()=>setShowChatboxDrawer(true)}>
-                            <Chat chats={chats} setChats={setChats} userId={chat.user.id} status={chat.user.status} selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId} username={chat.user.username} recentMessage={recentMessage} chatId={id} />
+                            <Chat userId={chat.user.id} status={chat.user.status} selectedUserId={selectedUserId} setSelectedUserId={setSelectedUserId} username={chat.user.username} recentMessage={recentMessage} chatId={id} />
                         </div>
                 ))) : (
-                    <div className=" flex flex-col p-8 items-center bg-dark-100 mx-4 rounded-[10px]">
-                        <div className="w-12 h-12 bg-dark-60 rounded-[10px] mb-4"></div>
+                    <div className=" flex flex-col p-8 items-center bg-dark-100 rounded-[10px]">
+                        <Image src="/illustrations/2.png" width="48" height="48"/>
                         <p className="text-lg font-bold text-center text-light-100 ">No recent chat</p>
                     </div>
                 )

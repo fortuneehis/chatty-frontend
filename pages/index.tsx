@@ -1,9 +1,7 @@
 import type { NextPage, NextPageContext } from 'next'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import { ChatBox, SideBar } from '../components'
-import StartChat from '../components/StartChat'
 import { UserService } from '../services'
 
 
@@ -13,6 +11,12 @@ const App: NextPage & {isAPrivatePage: ()=>boolean}= () => {
   const [selectedUserId, setSelectedUserId] = useState<number|null>(null)
   const [showSidebarDrawer, setShowSidebarDrawer] = useState(false)
   const [showChatboxDrawer, setShowChatboxDrawer] = useState(false)
+
+  useEffect(()=>{
+    toast("👋 Welcome Chief!", {
+      id: "welcome-chief"
+    })
+  },[])
  
   return (
     <main className="xl:max-w-[1440px] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 h-screen gap-5 md:px-10 md:py-8 w-screen">
@@ -46,7 +50,7 @@ export const getServerSideProps = async({req, res}: NextPageContext) => {
   
   const user = response?.data
   
-    if(error|| !user) {
+    if(error || !user) {
       return {
           redirect: {
               destination: "/login",
