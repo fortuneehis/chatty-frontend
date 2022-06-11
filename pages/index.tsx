@@ -33,15 +33,26 @@ App.isAPrivatePage = () => true
 
 
 export const getServerSideProps = async({req, res}: NextPageContext) => {
-
+  console.log(req?.headers["Cookie"])
   const cookies = req?.headers.cookie as string
+
+  console.log(cookies)
   if(!cookies) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false
-      }
+      res?.writeHead(302, {
+         Location: "/login",
+      }).end()
+
+      return {
+        props: {
+
+        }
     }
+    // return {
+    //   redirect: {
+    //     destination: "/login",
+    //     permanent: false
+    //   }
+    // }
   }
 
   const [response, error] = await UserService.getCurrentUser({
@@ -51,12 +62,22 @@ export const getServerSideProps = async({req, res}: NextPageContext) => {
   const user = response?.data
   
     if(error || !user) {
+
+      res?.writeHead(302, {
+          Location: "/login",
+      }).end()
+
       return {
-          redirect: {
-              destination: "/login",
-              permanent: false
+          props: {
+
           }
       }
+      // return {
+      //     redirect: {
+      //         destination: "/login",
+      //         permanent: false
+      //     }
+      // }
     }
       return {
           props: {}

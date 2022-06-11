@@ -28,13 +28,12 @@ const Chat = ({chatId, userId, username, status, recentMessage, selectedUserId, 
     const [userStatus, setUserStatus] = useState(()=>status)
 
     const selectedUserClickHandler = (userId: number) => {
-        setSelectedUserId(()=>userId)
+        setSelectedUserId(userId)
     }
 
     useEffect(()=>{
-        socket.on(`user_status:${userId}`, (status)=> {
-            console.log("status updated", status)
-            setUserStatus(status)
+        socket.on(`user_status:${userId}`, (data)=> {
+            setUserStatus(data)
         }) 
 
         return ()=>{

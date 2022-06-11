@@ -6,7 +6,7 @@ const APIService = (cancelToken?: CancelToken) => {
     return axios.create({
         withCredentials: true,
         cancelToken,
-        baseURL: config.SERVER_URL
+        baseURL: config.SERVER_URL as string
     })
 }
 

@@ -8,11 +8,11 @@ export const createUser = async (username: string, password: string) => {
             username,
             password
         })
-
+        alert(response)
         return [response, null]
 
     } catch(err: any) {
-       
+       alert(err)
         if(err.response) {
             return [null, err.response.data]
         }
@@ -55,7 +55,8 @@ export const getCurrentUser = async(config?: AxiosRequestHeaders) => {
         const response = await apiService().get("/users", {
             headers: {
                 ...config
-            }
+            },
+            withCredentials: true
         })
 
         return [response.data.user, null]

@@ -27,7 +27,7 @@ const ChatBox = ({selectedUserId, setSelectedUserId, showDrawer, match, setShowD
     const socket = useSocket()
     const messagesContainerRef = useRef<HTMLUListElement>(null)
     const [selectedMessage, setSelectedMessage] = useState<any>(null)
-
+    const [focusMessageInput, setFocusMessageInput] = useState(false)
 
     useEffect(()=> {
 
@@ -144,7 +144,7 @@ const ChatBox = ({selectedUserId, setSelectedUserId, showDrawer, match, setShowD
                 {messages.length > 0 ? ( <ul ref={messagesContainerRef} className="flex-1 scroll-smooth scrollbar-style flex basis-[40px] flex-col overflow-x-hidden overflow-y-auto lg:overflow-y-hidden lg:hover:overflow-y-auto mb-2">
                     {
                         messages?.length > 0 && messages.map((message: any)=> (
-                                <MessageBox key={message.id} setSelectedMessage={setSelectedMessage}  parent={message.parent} id={message.id} messageStatus={message.messageStatus} sender={message.sender} isSender={message.sender.id === user?.id} message={message.message} createdAt={message.createdAt}/>
+                                <MessageBox key={message.id} setFocusMessageInput={setFocusMessageInput} setSelectedMessage={setSelectedMessage}  parent={message.parent} id={message.id} messageStatus={message.messageStatus} sender={message.sender} isSender={message.sender.id === user?.id} message={message.message} createdAt={message.createdAt}/>
                         ))
                     }
                 
@@ -155,7 +155,7 @@ const ChatBox = ({selectedUserId, setSelectedUserId, showDrawer, match, setShowD
                     </div>
                     <p className="font-bold text-light-80">Start a chat with <span className="text-primary-100">{selectedUser.username}</span></p> 
                 </div>)}
-                <ChatBar setSelectedMessage={setSelectedMessage} selectedMessage={selectedMessage} messages={messages} setMessages={setMessages} selectedUserId={selectedUserId} />
+                <ChatBar setFocusMessageInput={setFocusMessageInput} focusMessageInput={focusMessageInput} setSelectedMessage={setSelectedMessage} selectedMessage={selectedMessage} messages={messages} setMessages={setMessages} selectedUserId={selectedUserId} />
             </motion.div>
            }
         </main>) : !match ? <StartChat/> : null

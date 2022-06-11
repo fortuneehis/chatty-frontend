@@ -12,6 +12,8 @@ type ChatBarProps = {
     selectedMessage: any
     setSelectedMessage: Dispatch<SetStateAction<any>>
     setMessages: Dispatch<SetStateAction<any>>
+    focusMessageInput: boolean
+    setFocusMessageInput: Dispatch<SetStateAction<boolean>>
 
 }
 
@@ -20,7 +22,7 @@ const EmojiPicker = dynamic(()=>import("emoji-picker-react"), {
     loading: ()=><div>Loading...</div>
 })
 
-export const ChatBar = ({selectedUserId, setSelectedMessage, selectedMessage, messages, setMessages}: ChatBarProps) => {
+export const ChatBar = ({selectedUserId, setFocusMessageInput, focusMessageInput, setSelectedMessage, selectedMessage, messages, setMessages}: ChatBarProps) => {
 
     const [isVoiceMessage, setIsVoiceMessage] = useState(false)
     const socket = useSocket()
@@ -68,10 +70,20 @@ export const ChatBar = ({selectedUserId, setSelectedMessage, selectedMessage, me
 
             setShowEmojiPicker(false)
         
-        
+            setMessage("")
     }
 
+    useEffect(()=> {
+        if(focusMessageInput && inputRef.current && selectedMessage){
+            inputRef.current.focus()
+        }
+        if(!selectedMessage) {
+            setFocusMessageInput(false)
+        }
+    }, [focusMessageInput, selectedMessage])
+
     return (
+        <div className="relative">
         <div className="relative flex flex-col items-start w-full mb-2 md:mb-0">
             {selectedMessage && (
                 <div className="flex items-center">
@@ -120,18 +132,24 @@ export const ChatBar = ({selectedUserId, setSelectedMessage, selectedMessage, me
                 </div>
             </div>
         </div>
+        
+        </div>
         {showEmojiPicker && 
-        <div className="absolute right-0 mb-2 bottom-full">
+        <div className="relative right-0 w-full mb-2 max-h-[128px] md:max-h-[256px] md:max-w-[420px] overflow-hidden md:absolute md:bottom-full">
         <EmojiPicker pickerStyle={{
             boxShadow: "none",
             border: "none",
             backgroundColor: "#1A1A1A",
             color: "#CECECE",
-        }} onEmojiClick={(_, data)=>{  
+            width: "100%"
+        }} disableSearchBar={true} onEmojiClick={(_, data)=>{  
             if(inputRef.current) {
           
                 setMessage(`${message.slice(0, inputSelectionEnd.current)}${data.emoji}${message.slice(inputSelectionEnd.current)}`)  
+                inputSelectionStart.current += data.emoji.length
+                inputSelectionEnd.current += data.emoji.length
                 inputRef.current.setSelectionRange(inputSelectionStart.current, inputSelectionEnd.current)
+                
             } 
         }}/>
         </div>}

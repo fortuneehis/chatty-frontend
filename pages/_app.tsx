@@ -14,6 +14,7 @@ interface ExtendedAppProps extends AppProps {
 function MyApp({ Component, pageProps }: ExtendedAppProps) {
   const isAPrivatePage = Component.isAPrivatePage ?? (()=>false)
   return (
+    
     <ErrorBoundary fallback={<Error/>}>
          <Toaster toastOptions={{
         duration: 1500,

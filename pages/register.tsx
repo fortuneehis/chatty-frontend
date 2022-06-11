@@ -44,13 +44,7 @@ const Register: NextPage  = () => {
             })}
             onSubmit={async({username, password}: InitialValues)=>{
                 setLoading(true)
-                const response =  UserService.createUser(username, password)
-                const [_, error] = await response
-                toast.promise(response, {
-                    loading: "🦄 We are setting you up!",
-                    success: "You are ready!",
-                    error: "Something went wrong!"
-                })
+                const [_, error] =  await UserService.createUser(username, password)
                 setLoading(false)
 
                 if(error) {
@@ -68,12 +62,12 @@ const Register: NextPage  = () => {
                      {validationError && validationError.map((error)=><p className="bg-red-500 text-sm text-light-100 p-2 rounded-[10px] mb-2">{error}</p>) }
                      {error && <p className="bg-red-500 text-sm text-light-100 p-2 rounded-[10px] mb-2">{error}</p>}
                     <div className="flex flex-col px-1 mb-4">
-                        <label className="mb-2 text-light-100" htmlFor="username">username</label>
+                        <label className="mb-2 text-light-100" htmlFor="username">Username</label>
                         <Field placeholder="john_0x" className="rounded-[10px] p-4 outline-primary-100 bg-dark-80 text-light-80 placeholder:text-light-60" id="username" name="username" type="text"/>
                         <p className="mt-1 text-xs text-red-500"><ErrorMessage name="username"/></p>
                     </div>
                     <div className="flex flex-col px-1 mb-4">
-                        <label className="mb-2 text-light-100" htmlFor="password">password</label>
+                        <label className="mb-2 text-light-100" htmlFor="password">Password</label>
                         <Field placeholder="********" className="p-4 rounded-[10px] bg-dark-80 text-light-80 placeholder:text-light-60" id="password" name="password" type="password"/>
                         <p className="mt-1 text-xs text-red-500"><ErrorMessage name="password"/></p>
                     </div>
@@ -100,12 +94,21 @@ export const getServerSideProps = async ({req, res}: NextPageContext) => {
     const user = response?.data
 
     if(user) {
+        res?.writeHead(302, {
+            Location: "/",
+        }).end()
+
         return {
-            redirect: {
-                destination: "/",
-                permanent: false
+            props: {
+
             }
         }
+        // return {
+        //     redirect: {
+        //         destination: "/",
+        //         permanent: false
+        //     }
+        // }
     }
 
 

@@ -19,10 +19,11 @@ type MessageBoxProps = {
     parent: any
     sender: any
     setSelectedMessage: Dispatch<SetStateAction<any>>
+    setFocusMessageInput: Dispatch<SetStateAction<boolean>>
 }
 
 
-const MessageBox = ({id, setSelectedMessage, sender, message, parent, createdAt, isSender, messageStatus}: MessageBoxProps) => {
+const MessageBox = ({id, setSelectedMessage, setFocusMessageInput, sender, message, parent, createdAt, isSender, messageStatus}: MessageBoxProps) => {
 
     const socket = useSocket()
 
@@ -83,7 +84,7 @@ const MessageBox = ({id, setSelectedMessage, sender, message, parent, createdAt,
             <motion.div 
             drag="x"
             dragSnapToOrigin={true}
-            dragElastic={true} 
+            dragElastic={0.4} 
             dragConstraints={messageRef}
             onDragEnd={(_, info)=>{
                if(info.offset.x > 80) {
@@ -97,6 +98,10 @@ const MessageBox = ({id, setSelectedMessage, sender, message, parent, createdAt,
                    })
                }
             }}
+            dragTransition={{
+                bounceStiffness: 600
+            }}
+            onDragTransitionEnd={()=>setFocusMessageInput(true)}
             className="p-4 max-w-[100%] md:max-w-[70%]">
                 <div className={`${classNames({
                     "bg-dark-60 rounded-br-none": isSender,
