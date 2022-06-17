@@ -2,7 +2,7 @@
 
 A secured realtime chat application built with NextJS, TailwindCSS, ExpressJS, SocketIO, Prisma.
 
-# Desktop
+## Desktop
 
 ### Home
 
@@ -14,7 +14,7 @@ A secured realtime chat application built with NextJS, TailwindCSS, ExpressJS, S
 
 ![Login](./assets/desktop-login.png)
 
-# Mobile
+## Mobile
 
 ### Home
 
