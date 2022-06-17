@@ -20,9 +20,9 @@ A secured realtime chat application built with NextJS, TailwindCSS, ExpressJS, S
 
 ![Home #1](./assets/mobile-home.png)
 
-![Home #2](./assets/desktop-home2.png)
+![Home #2](./assets/mobile-home2.png)
 
-![Home #3](./assets/desktop-home3.png)
+![Home #3](./assets/mobile-home3.png)
 
 ### Login
 
