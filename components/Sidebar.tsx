@@ -5,7 +5,6 @@ import { useSocket, useUser } from "../provider/hooks";
 import { UserService } from "../services";
 import ActiveUsers from "./ActiveUsers";
 import Chats from "./Chats";
-import withDrawer from "./HOC/withDrawer";
 import MiniProfile from "./MiniProfile";
 import SearchBar from "./SearchBar";
 import { MiniProfileSkeleton } from "./skeleton";
@@ -111,7 +110,4 @@ const Sidebar = ({
   );
 };
 
-export default withDrawer(Sidebar)({
-  minWidth: 768,
-  maxWidth: 1024,
-});
+export default Sidebar;

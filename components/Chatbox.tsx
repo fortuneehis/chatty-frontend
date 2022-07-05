@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import React, {
   Dispatch,
   SetStateAction,
@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 import { useSocket, useUser } from "../provider/hooks";
 import { ChatService } from "../services";
 import ChatBar from "./ChatBar";
-import withDrawer from "./HOC/withDrawer";
 import MessageBox from "./MessageBox";
 import MiniProfile from "./MiniProfile";
 import { MiniProfileSkeleton } from "./skeleton";
@@ -21,7 +20,6 @@ type ChatBoxProps = {
   selectedUserId: number | null;
   setShowDrawer: Dispatch<SetStateAction<boolean>>;
   showDrawer: boolean;
-  match: boolean;
   setSelectedUserId: Dispatch<SetStateAction<number | null>>;
 };
 
@@ -29,7 +27,6 @@ const ChatBox = ({
   selectedUserId,
   setSelectedUserId,
   showDrawer,
-  match,
   setShowDrawer,
 }: ChatBoxProps) => {
   const [selectedUser, setSelectedUser] = useState<any>(null);
@@ -59,7 +56,14 @@ const ChatBox = ({
     return () => {
       socket.off("new_message");
     };
-  }, [selectedUserId, messages]);
+  }, [selectedUserId, messages, socket]);
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setShowDrawer(window.innerWidth >= 768);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (selectedUser) {
@@ -74,7 +78,7 @@ const ChatBox = ({
         socket.off(`user_status:${selectedUser.id}`);
       };
     }
-  }, [selectedUser]);
+  }, [selectedUser, socket]);
 
   useEffect(() => {
     const fetchChat = async (id: number) => {
@@ -102,36 +106,36 @@ const ChatBox = ({
   }, [selectedUserId]);
 
   return selectedUser ? (
-    <main className="fixed bottom-0 z-10 flex items-end w-full h-full bg-opacity-50 bg-dark-60 md:bg-transparent md:relative md:col-start-1 md:col-end-9 lg:col-start-5 lg:col-end-13">
-      {
-        <motion.div
-          initial={
-            match
-              ? {
-                  y: 60,
-                  opacity: 0,
-                }
-              : undefined
-          }
-          animate={
-            match
-              ? {
-                  y: 0,
-                  opacity: 1,
-                }
-              : undefined
-          }
-          exit={
-            match
-              ? {
-                  y: 60,
-                  opacity: 0,
-                }
-              : undefined
-          }
-          className="w-full relative mt-4 md:mt-0 h-[95%] md:h-full bg-dark-80  rounded-tl-[30px] rounded-tr-[30px] md:rounded-[10px] p-4 xl:p-8  flex flex-col"
-        >
-          {match && (
+    <AnimatePresence>
+      {showDrawer && (
+        <main className="fixed bottom-0 z-10 flex items-end w-full h-full bg-opacity-50 bg-dark-60 md:bg-transparent md:relative md:col-start-1 md:col-end-9 lg:col-start-5 lg:col-end-13">
+          <motion.div
+            initial={
+              showDrawer
+                ? {
+                    y: 60,
+                    opacity: 0,
+                  }
+                : undefined
+            }
+            animate={
+              showDrawer
+                ? {
+                    y: 0,
+                    opacity: 1,
+                  }
+                : undefined
+            }
+            exit={
+              showDrawer
+                ? {
+                    y: 60,
+                    opacity: 0,
+                  }
+                : undefined
+            }
+            className="w-full relative mt-4 md:mt-0 h-[95%] md:h-full bg-dark-80  rounded-tl-[30px] rounded-tr-[30px] md:rounded-[10px] p-4 xl:p-8  flex flex-col"
+          >
             <motion.div
               initial={{
                 scale: 0.5,
@@ -147,71 +151,74 @@ const ChatBox = ({
                 setShowDrawer(false);
               }}
             ></motion.div>
-          )}
-          <div className="">
-            {selectedUser ? (
-              <MiniProfile
-                profileImg={"/unnamed.png"}
-                lastActiveAt={selectedUser.lastActiveAt || undefined}
-                username={selectedUser.username}
-                status={selectedUser.status}
-              />
-            ) : (
-              <MiniProfileSkeleton />
-            )}
-          </div>
-          {messages.length > 0 ? (
-            <ul
-              ref={messagesContainerRef}
-              className="flex-1 scroll-smooth scrollbar-style flex basis-[40px] flex-col overflow-x-hidden overflow-y-auto lg:overflow-y-hidden lg:hover:overflow-y-auto mb-2"
-            >
-              {messages?.length > 0 &&
-                messages.map((message: any) => (
-                  <MessageBox
-                    key={message.id}
-                    setFocusMessageInput={setFocusMessageInput}
-                    setSelectedMessage={setSelectedMessage}
-                    parent={message.parent}
-                    id={message.id}
-                    messageStatus={message.messageStatus}
-                    sender={message.sender}
-                    isSender={message.sender.id === user?.id}
-                    message={message.message}
-                    createdAt={message.createdAt}
-                  />
-                ))}
-            </ul>
-          ) : (
-            <div className="flex flex-col items-center justify-center flex-1">
-              <div>
-                <Image src="/illustrations/1.png" width="64" height="64" />
-              </div>
-              <p className="font-bold text-light-80">
-                Start a chat with{" "}
-                <span className="text-primary-100">
-                  {selectedUser.username}
-                </span>
-              </p>
+
+            <div className="">
+              {selectedUser ? (
+                <MiniProfile
+                  profileImg={"/unnamed.png"}
+                  lastActiveAt={selectedUser.lastActiveAt || undefined}
+                  username={selectedUser.username}
+                  status={selectedUser.status}
+                />
+              ) : (
+                <MiniProfileSkeleton />
+              )}
             </div>
-          )}
-          <ChatBar
-            setFocusMessageInput={setFocusMessageInput}
-            focusMessageInput={focusMessageInput}
-            setSelectedMessage={setSelectedMessage}
-            selectedMessage={selectedMessage}
-            messages={messages}
-            setMessages={setMessages}
-            selectedUserId={selectedUserId}
-          />
-        </motion.div>
-      }
-    </main>
-  ) : !match ? (
+            {messages.length > 0 ? (
+              <ul
+                ref={messagesContainerRef}
+                className="flex-1 scroll-smooth scrollbar-style flex basis-[40px] flex-col overflow-x-hidden overflow-y-auto lg:overflow-y-hidden lg:hover:overflow-y-auto mb-2"
+              >
+                {messages?.length > 0 &&
+                  messages.map((message: any) => (
+                    <MessageBox
+                      key={message.id}
+                      setFocusMessageInput={setFocusMessageInput}
+                      setSelectedMessage={setSelectedMessage}
+                      parent={message.parent}
+                      id={message.id}
+                      messageStatus={message.messageStatus}
+                      sender={message.sender}
+                      isSender={message.sender.id === user?.id}
+                      message={message.message}
+                      createdAt={message.createdAt}
+                    />
+                  ))}
+              </ul>
+            ) : (
+              <div className="flex flex-col items-center justify-center flex-1">
+                <div>
+                  <Image
+                    alt={"Start a chat illustration"}
+                    src="/illustrations/1.png"
+                    width="64"
+                    height="64"
+                  />
+                </div>
+                <p className="font-bold text-light-80">
+                  Start a chat with{" "}
+                  <span className="text-primary-100">
+                    {selectedUser.username}
+                  </span>
+                </p>
+              </div>
+            )}
+            <ChatBar
+              setFocusMessageInput={setFocusMessageInput}
+              focusMessageInput={focusMessageInput}
+              setSelectedMessage={setSelectedMessage}
+              selectedMessage={selectedMessage}
+              messages={messages}
+              setMessages={setMessages}
+              selectedUserId={selectedUserId}
+            />
+          </motion.div>
+        </main>
+      )}
+    </AnimatePresence>
+  ) : (
     <StartChat />
-  ) : null;
+  );
 };
 
-export default withDrawer(ChatBox)({
-  minWidth: 768,
-  maxWidth: 768,
-});
+export default ChatBox;
