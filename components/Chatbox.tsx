@@ -60,7 +60,12 @@ const ChatBox = ({
 
   useEffect(() => {
     window.addEventListener("resize", () => {
-      setShowDrawer(window.innerWidth >= 768);
+      if (window.innerWidth >= 768) {
+        setShowDrawer(true);
+        setSelectedUser(null);
+      } else {
+        setShowDrawer(false);
+      }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -145,9 +150,10 @@ const ChatBox = ({
                 transformOrigin: "center",
                 scale: 1,
               }}
-              className="absolute w-12 h-12 -translate-x-1/2 border-4 rounded-full cursor-pointer right-1/2 border-dark-80 md:invisible -top-6 bg-light-80"
+              className="absolute w-12 h-12 -translate-x-1/2 border-4 rounded-full cursor-pointer md:hidden right-1/2 border-dark-80 md:invisible -top-6 bg-light-80"
               onClick={() => {
                 setSelectedUserId(null);
+                setSelectedUser(null);
                 setShowDrawer(false);
               }}
             ></motion.div>
