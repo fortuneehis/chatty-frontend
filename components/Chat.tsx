@@ -1,24 +1,24 @@
-import classNames from "classnames";
-import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useSocket, useUser } from "../provider/hooks";
-import { convertToLocaleTime } from "../utils/date";
-import { textOverflowFix } from "../utils/string";
+import classNames from "classnames"
+import Image from "next/image"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { useSocket, useUser } from "../provider/hooks"
+import { convertToLocaleTime } from "../utils/date"
+import { textOverflowFix } from "../utils/string"
 
 type ChatProps = {
-  userId: number;
-  username: string;
-  recentMessage: any;
-  selectedUserId: number | null;
-  chatId: number;
-  status: string;
-  setSelectedUserId: Dispatch<SetStateAction<number | null>>;
-};
+  userId: number
+  username: string
+  recentMessage: any
+  selectedUserId: number | null
+  chatId: number
+  status: string
+  setSelectedUserId: Dispatch<SetStateAction<number | null>>
+}
 
 const activeChatClassName = (userId: number, selectedUserId: number | null) =>
   classNames({
     "bg-dark-60": userId === selectedUserId,
-  });
+  })
 
 const Chat = ({
   chatId,
@@ -29,24 +29,24 @@ const Chat = ({
   selectedUserId,
   setSelectedUserId,
 }: ChatProps) => {
-  const [user] = useUser();
-  const socket = useSocket();
-  const [isOnline, setIsOnline] = useState(() => status === "ONLINE");
+  const [user] = useUser()
+  const socket = useSocket()
+  const [isOnline, setIsOnline] = useState(() => status === "ONLINE")
 
-  const selectedUserClickHandler = (userId: number) => {
-    setSelectedUserId(userId);
-  };
+  const selectedUserClickHandler = (id: number) => {
+    setSelectedUserId(id)
+  }
 
   useEffect(() => {
     socket.on(`user_status:${userId}`, (data) => {
-      console.log("userStatus", data);
-      setIsOnline(data === "ONLINE");
-    });
+      console.log("userStatus", data)
+      setIsOnline(data === "ONLINE")
+    })
 
     return () => {
-      socket.off(`user_status:${userId}`);
-    };
-  }, [socket, userId, isOnline]);
+      socket.off(`user_status:${userId}`)
+    }
+  }, [socket, userId, isOnline])
 
   return (
     <li
@@ -92,7 +92,7 @@ const Chat = ({
         </div>
       </div>
     </li>
-  );
-};
+  )
+}
 
-export default Chat;
+export default Chat

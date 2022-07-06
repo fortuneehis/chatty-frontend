@@ -1,19 +1,14 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext } from "react"
 import { UserContext } from "../user.provider"
 
-
-
-
 const useUser = () => {
-    const context = useContext(UserContext)
+  const context = useContext(UserContext)
 
-    if(context === null) {
-        throw new Error("useSocket must be used inside a SocketProvider")
-    }
+  if (context === null) {
+    throw new Error("useSocket must be used inside a SocketProvider")
+  }
 
-    
-    return context
-
+  return context
 }
 
 export default useUser

@@ -4,58 +4,58 @@ import {
   SetStateAction,
   useEffect,
   useState,
-} from "react";
-import { UserService } from "../services";
-import toast from "react-hot-toast";
-import MiniProfile from "./MiniProfile";
-import classNames from "classnames";
-import { debounce } from "lodash";
+} from "react"
+import { UserService } from "../services"
+import toast from "react-hot-toast"
+import MiniProfile from "./MiniProfile"
+import classNames from "classnames"
+import { debounce } from "lodash"
 
 type SearchBarProps = {
-  selectedUserId: number | null;
-  setSelectedUserId: Dispatch<SetStateAction<number | null>>;
-  setShowChatboxDrawer: Dispatch<SetStateAction<boolean>>;
-};
+  selectedUserId: number | null
+  setSelectedUserId: Dispatch<SetStateAction<number | null>>
+  setShowChatboxDrawer: Dispatch<SetStateAction<boolean>>
+}
 
 const SearchBar = ({
   setSelectedUserId,
   selectedUserId,
   setShowChatboxDrawer,
 }: SearchBarProps) => {
-  const [value, setValue] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [showResults, setShowResults] = useState(false);
+  const [value, setValue] = useState("")
+  const [searchResults, setSearchResults] = useState([])
+  const [showResults, setShowResults] = useState(false)
 
   const valueChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
+    setValue(e.target.value)
+  }
 
   const resultClickEventHandler = (userId: number) => {
-    setSelectedUserId(() => userId);
-    setShowChatboxDrawer(true);
-    setShowResults(false);
-    setValue("");
-  };
+    setSelectedUserId(() => userId)
+    setShowChatboxDrawer(true)
+    setShowResults(false)
+    setValue("")
+  }
 
   useEffect(() => {
     const searchUsers = async () => {
       if (value.trim().length === 0) {
-        setShowResults(false);
-        return;
+        setShowResults(false)
+        return
       }
-      const [data, error] = await UserService.searchUsers(value.trim());
+      const [data, error] = await UserService.searchUsers(value.trim())
 
       if (error) {
         toast.error(error.message, {
           duration: 15000,
-        });
+        })
       }
-      setShowResults(true);
-      setSearchResults(data.users);
-    };
+      setShowResults(true)
+      setSearchResults(data.users)
+    }
 
-    debounce(searchUsers, 300)();
-  }, [value]);
+    debounce(searchUsers, 300)()
+  }, [value])
 
   return (
     <div className="relative mt-12">
@@ -94,10 +94,10 @@ const SearchBar = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default SearchBar;
+export default SearchBar
 
 {
   /* <div className="relative mr-2 shrink-0">

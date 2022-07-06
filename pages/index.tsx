@@ -1,19 +1,19 @@
-import type { NextPage, NextPageContext } from "next";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { ChatBox, SideBar } from "../components";
-import { UserService } from "../services";
+import type { NextPage, NextPageContext } from "next"
+import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
+import { ChatBox, SideBar } from "../components"
+import { UserService } from "../services"
 
 const App: NextPage & { isAPrivatePage: () => boolean } = () => {
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-  const [showSidebarDrawer, setShowSidebarDrawer] = useState(false);
-  const [showChatboxDrawer, setShowChatboxDrawer] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
+  const [showSidebarDrawer, setShowSidebarDrawer] = useState(false)
+  const [showChatboxDrawer, setShowChatboxDrawer] = useState(false)
 
   useEffect(() => {
     toast("👋 Welcome Chief!", {
       id: "welcome-chief",
-    });
-  }, []);
+    })
+  }, [])
 
   return (
     <main className="xl:max-w-[1440px] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 h-screen gap-5 md:px-10 md:py-8 w-screen">
@@ -32,26 +32,26 @@ const App: NextPage & { isAPrivatePage: () => boolean } = () => {
         selectedUserId={selectedUserId}
       />
     </main>
-  );
-};
+  )
+}
 
-App.isAPrivatePage = () => true;
+App.isAPrivatePage = () => true
 
 export const getServerSideProps = async ({ req, res }: NextPageContext) => {
-  console.log(req?.headers["Cookie"]);
-  const cookies = req?.headers.cookie as string;
+  console.log(req?.headers.Cookie)
+  const cookies = req?.headers.cookie as string
 
-  console.log(cookies);
+  console.log(cookies)
   if (!cookies) {
     res
       ?.writeHead(302, {
         Location: "/login",
       })
-      .end();
+      .end()
 
     return {
       props: {},
-    };
+    }
     // return {
     //   redirect: {
     //     destination: "/login",
@@ -62,20 +62,20 @@ export const getServerSideProps = async ({ req, res }: NextPageContext) => {
 
   const [response, error] = await UserService.getCurrentUser({
     Cookie: cookies,
-  });
+  })
 
-  const user = response?.data;
+  const user = response?.data
 
   if (error || !user) {
     res
       ?.writeHead(302, {
         Location: "/login",
       })
-      .end();
+      .end()
 
     return {
       props: {},
-    };
+    }
     // return {
     //     redirect: {
     //         destination: "/login",
@@ -85,7 +85,7 @@ export const getServerSideProps = async ({ req, res }: NextPageContext) => {
   }
   return {
     props: {},
-  };
-};
+  }
+}
 
-export default App;
+export default App
