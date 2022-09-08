@@ -112,7 +112,7 @@ const ChatBox = ({
   return selectedUser ? (
     <AnimatePresence>
       {showDrawer && (
-        <main className="fixed bottom-0 z-10 flex items-end w-full h-full bg-opacity-50 bg-dark-60 md:bg-transparent md:relative md:col-start-1 md:col-end-9 lg:col-start-5 lg:col-end-13">
+        <section className="fixed bottom-0 z-10 flex items-end w-full h-full bg-opacity-50 bg-dark-60 md:bg-transparent md:relative md:col-start-1 md:col-end-9 lg:col-start-5 lg:col-end-13">
           <motion.div
             initial={
               showDrawer
@@ -218,7 +218,7 @@ const ChatBox = ({
               selectedUserId={selectedUserId}
             />
           </motion.div>
-        </main>
+        </section>
       )}
     </AnimatePresence>
   ) : (
